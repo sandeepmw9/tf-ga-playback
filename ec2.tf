@@ -33,17 +33,22 @@ resource "aws_instance" "ec2_instance" {
     host        = self.public_ip
   }
 
-  provisioner "remote-exec" {
-    inline = [ 
-      "sudo apt update -y",
-      "sudo apt install nginx -y",
-      "echo 'hello from terraform provisioned instance' > /usr/share/nginx/index.html",
-      "sudo service nginx restart"
-     ]
-  }
-
   provisioner "local-exec" {
     command = "echo '${self.public_ip}' > inventory.txt"
+  }
+
+  provisioner "file" {
+    source = "apache.yaml"
+    destination = "/tmp/apache.yaml"
+  }
+
+
+ provisioner "remote-exec" {
+    inline = [ 
+      "sudo apt update -y",
+      "sudo apt install ansible -y",
+      "sudo ansible-playbook -u=ubuntu -c=local -i localhost, /tmp/apache.yaml"
+     ]
   }
 
 }
