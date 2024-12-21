@@ -1,4 +1,4 @@
-name: nginx-deployment
+name: provision and deploy
 on:
   workflow_dispatch:
 jobs:

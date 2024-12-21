@@ -1,0 +1,27 @@
+name: destroy infra
+on: 
+  workflow_dispatch:
+jobs:
+  create_infra:
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - name: get code
+        uses: actions/checkout@v4
+      - name: install terraform
+        uses: hashicorp/setup-terraform@v2.0.3
+      - name: aws intergation using OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::736218978384:role/github-oidc-full-perms
+          aws-region: ap-south-1
+      - name: initialize
+        run: terraform init
+      - name: plan_destroy
+        run: terraform plan -destroy -out myplan
+      - name: apply_destroy
+        run: terraform apply myplan
+          
+    
