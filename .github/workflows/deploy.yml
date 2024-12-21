@@ -1,0 +1,38 @@
+name: nginx-deployment
+on:
+  workflow_dispatch:
+jobs:
+  provision-infra:
+    runs-on: ubuntu-latest
+    steps:
+      - name: get-code
+        uses: actions/checkout@v4
+      - name: install terraform
+        uses: hashicorp/setup-terraform@v2.0.3
+      - name: aws intergation using OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::736218978384:role/github-oidc-full-perms
+          aws-region: ap-south-1
+      - name: initialize&format
+        run: |
+          terraform init
+          terraform fmt
+      - name: plan_apply
+        run: terraform plan -out myplan
+      - name: apply_plan
+        run: terraform apply myplan
+  deploy_website_using_ansible:
+    runs-on: ubuntu-latest
+    steps:
+      - name: get-code
+        uses: actions/checkout@v4
+      - name: install-ansible
+        run: |
+          sudo apt-get update && sudo apt-get install -y ansible
+      - name: Execute Ansible Playbook
+        run: |
+          chmod 600 id_rsa.pem
+          ansible-playbook -u=ubuntu -i inventory.txt nginx.yaml --private-key=id_rsa.pem
+
+  
