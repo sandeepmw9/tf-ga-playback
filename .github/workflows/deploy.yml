@@ -3,6 +3,9 @@ on:
   workflow_dispatch:
 jobs:
   provision-infra:
+    permissions:
+      id-token: write
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - name: get-code
