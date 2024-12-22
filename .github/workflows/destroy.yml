@@ -2,7 +2,7 @@ name: destroy infra
 on: 
   workflow_dispatch:
 jobs:
-  create_infra:
+  destroy_infra:
     permissions:
       id-token: write
       contents: read
@@ -17,6 +17,8 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::736218978384:role/github-oidc-full-perms
           aws-region: ap-south-1
+      - name: get key_name
+        run: ssh-keygen -t rsa -N "" -f "ec2_login_key"
       - name: initialize
         run: terraform init
       - name: plan_destroy
