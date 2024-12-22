@@ -20,8 +20,12 @@ jobs:
       - name: initialize
         run: terraform init
       - name: plan_destroy
+        id: plan
         run: terraform plan -destroy -out myplan
+        continue-on-error: true
       - name: apply_destroy
+        if: steps.plan.outcome == 'failure'
         run: terraform apply myplan
+        continue-on-error: true
           
     
