@@ -1,7 +1,9 @@
 terraform {
+
+  #required_version = "value"
     backend "s3" {
       bucket = "tfstate1224"
-      key = "terraform_state_store_day4"
+      key = "terraform_state_tf_ga_playback"
       region = "ap-south-1"
       dynamodb_table = "tfstate-locking"
     }
@@ -20,6 +22,11 @@ terraform {
     local = {
       source  = "hashicorp/local"
       version = "2.5.2"
+    }
+
+    null = {
+      source = "hashicorp/null"
+      version = "3.2.3"
     }
   }
 }

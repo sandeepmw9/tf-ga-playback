@@ -17,6 +17,8 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::736218978384:role/github-oidc-full-perms
           aws-region: ap-south-1
+      - name: install ssh_key_pair
+        run: ssh-keygen -t rsa -N "" -f "ec2_login_key" 
       - name: initialize&format
         run: |
           terraform init
@@ -25,18 +27,7 @@ jobs:
         run: terraform plan -out myplan
       - name: apply_plan
         run: terraform apply myplan
-  # deploy_website_using_ansible:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: get-code
-  #       uses: actions/checkout@v4
-  #     - name: install-ansible
-  #       run: |
-  #         sudo apt-get update && sudo apt-get install -y ansible
-  #     - name: Execute Ansible Playbook
-  #       run: |
-  #         chmod 600 id_rsa.pem
-  #         ansible-playbook -u=ubuntu -i inventory.txt apache.yaml --private-key=id_rsa.pem
+
 
  
   

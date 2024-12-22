@@ -31,6 +31,11 @@ variable "allowed_ports" {
 
 variable "instance_type" {
   default = "t3.micro"
+
+  validation {
+    condition     = contains(["t2.micro", "t2.small", "t3.micro"], var.instance_type)
+    error_message = "Invalid instance type. Allowed values are t2.micro, t2.small, t3.micro."
+  }
 }
 
 variable "instance_name" {
