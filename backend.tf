@@ -1,6 +1,6 @@
 terraform {
 
-  # required_version = "value"
+  required_version = "value"
   backend "s3" {
     bucket = "tfstate1224"
     key = "terraform_state_tf_ga_playback"
