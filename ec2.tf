@@ -18,17 +18,22 @@ data "local_file" "ec2_login_key" {
   filename = "ec2_login_key"
 }
 
+resource "random_string" "suffix" {
+  length  = 8
+  special = false
+}
+
 resource "aws_instance" "ec2_instance" {
-  depends_on = [ aws_key_pair.ec2_login_key ] #depends on block for handling failures due to resource dependency
+  depends_on                  = [aws_key_pair.ec2_login_key] #depends on block for handling failures due to resource dependency
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = var.instance_type
   subnet_id                   = aws_subnet.public.id
   associate_public_ip_address = true
-  key_name = aws_key_pair.ec2_login_key.key_name
-  security_groups = [aws_security_group.lab4_sg.id]
+  key_name                    = aws_key_pair.ec2_login_key.key_name
+  security_groups             = [aws_security_group.lab4_sg.id]
 
   tags = {
-    Name      = "${var.instance_name}-${terraform.workspace}"
+    Name      = "${var.instance_name}-${random_string.suffix.id}-${terraform.workspace}"
     terraform = true
   }
 
@@ -37,7 +42,7 @@ resource "aws_instance" "ec2_instance" {
     delete = "1h"
   }
 
-  lifecycle  { #using lifecycle block to control distruction of resources
+  lifecycle { #using lifecycle block to control distruction of resources
     create_before_destroy = true
 
 
@@ -61,10 +66,10 @@ resource "aws_instance" "ec2_instance" {
   }
 
 
- provisioner "remote-exec" {
-    inline = [ 
+  provisioner "remote-exec" {
+    inline = [
       "echo hello from $(hostname)"
-     ]
+    ]
     #  on_failure = "continue"
     #  retries = 3
     #  retry_interval = 5
@@ -73,7 +78,7 @@ resource "aws_instance" "ec2_instance" {
 }
 
 resource "aws_key_pair" "ec2_login_key" {
-  key_name = "ec2_login_key"
+  key_name   = "ec2_login_key"
   public_key = file("ec2_login_key.pub")
 }
 

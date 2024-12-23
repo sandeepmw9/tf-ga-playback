@@ -1,12 +1,12 @@
 terraform {
 
-  #required_version = "value"
-    backend "s3" {
-      bucket = "tfstate1224"
-      key = "terraform_state_tf_ga_playback"
-      region = "ap-south-1"
-      dynamodb_table = "tfstate-locking"
-    }
+  required_version = "value"
+  backend "s3" {
+    bucket = "tfstate1224"
+    key = "terraform_state_tf_ga_playback"
+    region = "ap-south-1"
+    dynamodb_table = "tfstate-locking"
+  }
 
   required_providers {
     aws = {
@@ -25,8 +25,13 @@ terraform {
     }
 
     null = {
-      source = "hashicorp/null"
+      source  = "hashicorp/null"
       version = "3.2.3"
+    }
+
+    random = {
+      source  = "hashicorp/random"
+      version = "3.6.3"
     }
   }
 }

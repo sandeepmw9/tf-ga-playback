@@ -15,7 +15,7 @@ jobs:
       - name: aws intergation using OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::736218978384:role/github-oidc-full-perms
+          role-to-assume: arn:aws:iam::736218978384:role/github-oidc-full-perms #can be set as secrets in github
           aws-region: ap-south-1
       - name: install ssh_key_pair
         run: ssh-keygen -t rsa -N "" -f "ec2_login_key" 
